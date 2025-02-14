@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Singleton singleton = new Singleton();
+            Console.WriteLine(new DateOnly(2021,3,3));
         }
     }
 }
