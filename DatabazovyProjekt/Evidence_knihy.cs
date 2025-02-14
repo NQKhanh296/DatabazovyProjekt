@@ -26,5 +26,17 @@ namespace DatabazovyProjekt
         public int knihovna_id { get; set; }
         public int kniha_id { get; set; }
         public DateTime datum { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Evidence_knihy knihy &&
+                   knihovna_id == knihy.knihovna_id &&
+                   kniha_id == knihy.kniha_id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(knihovna_id, kniha_id);
+        }
     }
 }
