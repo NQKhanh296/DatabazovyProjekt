@@ -23,7 +23,7 @@ namespace DatabazovyProjekt
         {
             if (JeKnihovnaVDatabazi(knihovna.nazev, knihovna.mesto))
             {
-                throw new Exception("Tato knihovna uz je v databazi.");
+                throw new Exception("Tato knihovna uz je v databazi");
             }
             string query = "INSERT INTO knihovna (nazev, mesto) VALUES (@nazev, @mesto)";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -49,6 +49,10 @@ namespace DatabazovyProjekt
                     ));
                 }
             }
+            if (knihovny.Count == 0 || knihovny == null)
+            {
+                return "Zadne knihovny nenalezen v databazi";
+            }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var k in knihovny)
             {
@@ -60,7 +64,7 @@ namespace DatabazovyProjekt
         {
             if (!JeKnihovnaVDatabazi(nazev,mesto))
             {
-                throw new Exception("Tato knihovna neni v databazi.");
+                throw new Exception("Tato knihovna neni v databazi");
             }
             string query = "DELETE FROM knihovna WHERE nazev = @nazev AND mesto = @mesto";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -76,7 +80,7 @@ namespace DatabazovyProjekt
         {
             if (JeZamestnanecVDatabazi(zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni))
             {
-                throw new Exception("Tento zamestnanec uz je v systemu.");
+                throw new Exception("Tento zamestnanec uz je v systemu");
             }
             string query = "INSERT INTO zamestnanec (jmeno, prijmeni, datum_narozeni) VALUES (@jmeno, @prijmeni, @datum_narozeni)";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -104,6 +108,10 @@ namespace DatabazovyProjekt
                     ));
                 }
             }
+            if (zamestnanci.Count == 0 || zamestnanci == null)
+            {
+                return "Zadne zamestnanec nenalezen v databazi";
+            }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var z in zamestnanci)
             {
@@ -115,7 +123,7 @@ namespace DatabazovyProjekt
         {
             if (!JeZamestnanecVDatabazi(jmeno, prijmeni, datum_narozeni))
             {
-                throw new Exception("Tento zamestnanec neni v databazi.");
+                throw new Exception("Tento zamestnanec neni v databazi");
             }
             string query = "DELETE FROM zamestnanec WHERE jmeno = @jmeno AND prijmeni = @prijmeni AND datum_narozeni = @datum_narozeni";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -132,7 +140,7 @@ namespace DatabazovyProjekt
         {
             if (JeKnihaVDatabazi(kniha.nazev))
             {
-                throw new Exception("Tato kniha uz je v systemu.");
+                throw new Exception("Tato kniha uz je v systemu");
             }
             string query = "INSERT INTO kniha (nazev, zanr, autor, zapujceno) VALUES (@nazev, @zanr, @autor, @zapujceno)";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -162,6 +170,10 @@ namespace DatabazovyProjekt
                     ));
                 }
             }
+            if (knihy.Count == 0 || knihy == null)
+            {
+                return "Zadne knihy nenalezen v databazi";
+            }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var k in knihy)
             {
@@ -173,7 +185,7 @@ namespace DatabazovyProjekt
         {
             if (!JeKnihaVDatabazi(nazev))
             {
-                throw new Exception("Tato kniha neni v databazi.");
+                throw new Exception("Tato kniha neni v databazi");
             }
             string query = "DELETE FROM kniha WHERE nazev = @nazev";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -183,17 +195,22 @@ namespace DatabazovyProjekt
             }
         }
 
-        //tabulka Evidence_zamestnancu
-        /*public bool EvidovatZamestnanceDoKnihovny(Zamestnanec z, Knihovna k, float plat, DateTime datum)
+        //tabulka evidence_zamestnancu
+        public void EvidovatZamestnanceDoKnihovny(Zamestnanec zamestnanec, Knihovna knihovna, float plat, DateTime datum)
         {
-            PridatZamestnance(z);
-            PridatKnihovna(k);
-            int idKnihovna = IDKnihovnaPodleNazevAMesto(k.nazev, k.mesto);
-            int idZamestnance = IDZamestnancePodleJmenaPrijmeniADatumNarozeni(z.jmeno, z.prijmeni, z.datum_narozeni);
-            Evidence_zamestnancu ez = new Evidence_zamestnancu(idKnihovna,idZamestnance,plat,datum);
-            if (pouziteEvidenceZamestnancu.Contains(ez))
+            if (!JeZamestnanecVDatabazi(zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni))
             {
-                throw new Exception("Tento zamestnanec uz byl evidovan k teto knihovne");
+                PridatZamestnance(zamestnanec);
+            }
+            if (!JeKnihovnaVDatabazi(knihovna.nazev, knihovna.mesto))
+            {
+                PridatKnihovna(knihovna);
+            }
+            int idZamestnance = IDZamestnancePodleJmenaPrijmeniADatumNarozeni(zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni);
+            int idKnihovna = IDKnihovnaPodleNazevAMesto(knihovna.nazev, knihovna.mesto);
+            if (JeEvidenceZamestnanceVDatabazi(idKnihovna, idZamestnance))
+            {
+                throw new Exception("Tento zaměstnanec již byl evidován k této knihovně.");
             }
             string query = "INSERT INTO evidence_zamestnancu (knihovna_id, zamestnanec_id, plat, datum) VALUES (@knihovna_id, @zamestnanec_id, @plat, @datum)";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -204,40 +221,34 @@ namespace DatabazovyProjekt
                 command.Parameters.AddWithValue("@datum", datum);
                 command.ExecuteNonQuery();
             }
-            pouziteEvidenceZamestnancu.Add(ez);
-            return true;
         }
-        public bool EvidovatZamestnanceDoKnihovny(string jmeno, string prijmeni, DateTime datum_narozeni, string nazev, string mesto ,float plat, DateTime datum)
+
+        //tabulka evidence_knih - public metody
+        public void EvidovatKnihuDoKnihovny(Kniha kniha, Knihovna knihovna)
         {
-            var indexZ = pouzitiZamestnanci.FindIndex(z => z.jmeno == jmeno && z.prijmeni == prijmeni && z.datum_narozeni == datum_narozeni);
-            if (indexZ == -1)
+            if (!JeKnihaVDatabazi(kniha.nazev))
             {
-                PridatZamestnance(new Zamestnanec(jmeno,prijmeni,datum_narozeni));
+                PridatKnihu(kniha);
             }
-            var index = pouziteKnihovny.FindIndex(k => k.nazev == nazev && k.mesto == mesto);
-            if (index == -1)
+            if (!JeKnihovnaVDatabazi(knihovna.nazev, knihovna.mesto))
             {
-                PridatKnihovna(new Knihovna(nazev,mesto));
+                PridatKnihovna(knihovna);
             }
-            int idKnihovna = IDKnihovnaPodleNazevAMesto(nazev, mesto);
-            int idZamestnance = IDZamestnancePodleJmenaPrijmeniADatumNarozeni(jmeno, prijmeni, datum_narozeni);
-            Evidence_zamestnancu ez = new Evidence_zamestnancu(idKnihovna, idZamestnance, plat, datum);
-            if (pouziteEvidenceZamestnancu.Contains(ez))
+            int idKniha = IDKnihaPodleNazev(kniha.nazev);
+            int idKnihovna = IDKnihovnaPodleNazevAMesto(knihovna.nazev, knihovna.mesto);
+            if (JeEvidenceKnihyVDatabazi(idKnihovna, idKniha))
             {
-                throw new Exception("Tento zamestnanec uz byl evidovan k teto knihovne");
+                throw new Exception("Tato kniha již byla evidována k této knihovně.");
             }
-            string query = "INSERT INTO evidence_zamestnancu (knihovna_id, zamestnanec_id, plat, datum) VALUES (@knihovna_id, @zamestnanec_id, @plat, @datum)";
+            string query = "INSERT INTO evidence_knih (knihovna_id, kniha_id) VALUES (@knihovna_id, @kniha_id)";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@knihovna_id", idKnihovna);
-                command.Parameters.AddWithValue("@zamestnanec_id", idZamestnance);
-                command.Parameters.AddWithValue("@plat", plat);
-                command.Parameters.AddWithValue("@datum", datum);
+                command.Parameters.AddWithValue("@kniha_id", idKniha);
                 command.ExecuteNonQuery();
             }
-            pouziteEvidenceZamestnancu.Add(ez);
-            return true;
-        }*/
+        }
+
 
         //tabulka knihovna - private metody
         private bool JeKnihovnaVDatabazi(string nazev, string mesto)
@@ -251,7 +262,7 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
-        private int? IDKnihovnaPodleNazevAMesto(string nazev, string mesto)
+        private int IDKnihovnaPodleNazevAMesto(string nazev, string mesto)
         {
             string query = "SELECT knihovna.id FROM knihovna WHERE nazev = @nazev AND mesto = @mesto";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -280,7 +291,7 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
-        private int? IDZamestnancePodleJmenaPrijmeniADatumNarozeni(string jmeno, string prijmeni, DateTime datum_narozeni)
+        private int IDZamestnancePodleJmenaPrijmeniADatumNarozeni(string jmeno, string prijmeni, DateTime datum_narozeni)
         {
             string query = "SELECT zamestnanec.id FROM zamestnanec WHERE jmeno = @jmeno and prijmeni = @prijmeni and datum_narozeni = @datum_narozeni";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -308,7 +319,7 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
-        private int? IDKnihaPodleNazev(string nazev)
+        private int IDKnihaPodleNazev(string nazev)
         {
             string query = "SELECT kniha.id FROM kniha WHERE nazev = @nazev";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -321,6 +332,32 @@ namespace DatabazovyProjekt
                 }
             }
             throw new Exception("ID kniha nenalezen");
+        }
+
+        //tabulka evidence_zamestnancu - private metody
+        private bool JeEvidenceZamestnanceVDatabazi(int knihovnaId, int zamestnanecId)
+        {
+            string query = "SELECT COUNT(*) FROM evidence_zamestnancu WHERE knihovna_id = @knihovna_id AND zamestnanec_id = @zamestnanec_id";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@knihovna_id", knihovnaId);
+                command.Parameters.AddWithValue("@zamestnanec_id", zamestnanecId);
+                int count = (int)command.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+        //tabulka evidence_knihy - private metody
+        private bool JeEvidenceKnihyVDatabazi(int knihovnaId, int knihaId)
+        {
+            string query = "SELECT COUNT(*) FROM evidence_knih WHERE knihovna_id = @knihovna_id AND kniha_id = @kniha_id";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@knihovna_id", knihovnaId);
+                command.Parameters.AddWithValue("@kniha_id", knihaId);
+                int count = (int)command.ExecuteScalar();
+                return count > 0;
+            }
         }
     }
 }
