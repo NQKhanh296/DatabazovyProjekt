@@ -23,8 +23,6 @@ namespace DatabazovyProjekt
             string volba = volba_randomcase.ToLower();
             switch (volba)
             {
-                default:
-                    throw new Exception($"Neplatný vstup: {volba}. Povolené volby jsou: knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knih, vse");
                 case "knihovna":
                     DeleteFrom(volba);
                     break;
@@ -47,6 +45,9 @@ namespace DatabazovyProjekt
                     DeleteFrom("evidence_zamestnancu");
                     DeleteFrom("evidence_knih");
                     break;
+                default:
+                    throw new Exception(@$"Neplatný vstup: {volba}. Povolené volby jsou: 
+                                           knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knih, vse");
             }
         }
         private void DeleteFrom(string nazevTabulky)
@@ -99,6 +100,18 @@ namespace DatabazovyProjekt
             }
             return stringBuilder.ToString();
         }
+        public void UpravitKnihovnu(string puvodniNazev, string puvodniMesto, string novyNazev, string noveMesto)
+        {
+            int idKnihovna = IDKnihovnaPodleNazevAMesto(puvodniNazev,puvodniMesto);
+            string query = "UPDATE knihovna SET nazev = @nazev, mesto = @mesto WHERE id = @id";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@nazev", novyNazev);
+                command.Parameters.AddWithValue("@mesto", noveMesto);
+                command.Parameters.AddWithValue("@id", idKnihovna);
+                command.ExecuteNonQuery();
+            }
+        }
         public void SmazatKnihovna(string nazev, string mesto)
         {
             if (!JeKnihovnaVDatabazi(nazev,mesto))
@@ -121,7 +134,8 @@ namespace DatabazovyProjekt
             {
                 throw new Exception("Tento zamestnanec uz je v systemu");
             }
-            string query = "INSERT INTO zamestnanec (jmeno, prijmeni, datum_narozeni) VALUES (@jmeno, @prijmeni, @datum_narozeni)";
+            string query = @"INSERT INTO zamestnanec (jmeno, prijmeni, datum_narozeni) 
+                             VALUES (@jmeno, @prijmeni, @datum_narozeni)";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@jmeno", zamestnanec.jmeno);
@@ -149,7 +163,7 @@ namespace DatabazovyProjekt
             }
             if (zamestnanci.Count == 0 || zamestnanci == null)
             {
-                return "Zadne zamestnanec nenalezen v databazi";
+                return "Zadni zamestnanci nenalezen v databazi";
             }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var z in zamestnanci)
@@ -158,13 +172,31 @@ namespace DatabazovyProjekt
             }
             return stringBuilder.ToString();
         }
+        public void UpravitZamestnance(string puvodniJmeno, string puvodniPrijmeni, DateTime puvodniDatumNarozeni, string noveJmeno, string novePrijmeni, DateTime noveDatumNarozeni)
+        {
+            int idZamestnance = IDZamestnancePodleJmenaPrijmeniADatumNarozeni(puvodniJmeno,puvodniPrijmeni,puvodniDatumNarozeni);
+            string query = @"UPDATE zamestnanec SET jmeno = @jmeno, prijmeni = @prijmeni, datum_narozeni = @datum_narozeni 
+                             WHERE id = @id";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@jmeno", noveJmeno);
+                command.Parameters.AddWithValue("@prijmeni", novePrijmeni);
+                command.Parameters.AddWithValue("@datum_narozeni", noveDatumNarozeni);
+                command.Parameters.AddWithValue("@id", idZamestnance);
+                command.ExecuteNonQuery();
+            }
+        }
         public void SmazatZamestnance(string jmeno, string prijmeni, DateTime datum_narozeni)
         {
             if (!JeZamestnanecVDatabazi(jmeno, prijmeni, datum_narozeni))
             {
                 throw new Exception("Tento zamestnanec neni v databazi");
             }
-            string query = "DELETE FROM zamestnanec WHERE jmeno = @jmeno AND prijmeni = @prijmeni AND datum_narozeni = @datum_narozeni";
+            string query = @"DELETE FROM zamestnanec 
+                             WHERE jmeno = @jmeno 
+                             AND prijmeni = @prijmeni   
+                             AND datum_narozeni = @datum_narozeni";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@jmeno", jmeno);
@@ -220,6 +252,21 @@ namespace DatabazovyProjekt
             }
             return stringBuilder.ToString();
         }
+        public void UpravitKnihu(string puvodniNazev, string novyNazev, string novyZanr, string novyAutor, bool noveZapujceno)
+        {
+            int idKniha = IDKnihaPodleNazev(puvodniNazev);
+            string query = @"UPDATE kniha SET nazev = @nazev, zanr = @zanr, autor = @autor, zapujceno = @zapujceno 
+                             WHERE id = @id";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@nazev", novyNazev);
+                command.Parameters.AddWithValue("@zanr", novyZanr);
+                command.Parameters.AddWithValue("@autor", novyAutor);
+                command.Parameters.AddWithValue("@zapujceno", noveZapujceno);
+                command.Parameters.AddWithValue("@id", idKniha);
+                command.ExecuteNonQuery();
+            }
+        }
         public void SmazatKnihu(string nazev)
         {
             if (!JeKnihaVDatabazi(nazev))
@@ -251,7 +298,8 @@ namespace DatabazovyProjekt
             {
                 throw new Exception("Tento zamestnanec jiz byl evidovan k teto knihovne.");
             }
-            string query = "INSERT INTO evidence_zamestnancu (knihovna_id, zamestnanec_id, plat, datum) VALUES (@knihovna_id, @zamestnanec_id, @plat, @datum)";
+            string query = @"INSERT INTO evidence_zamestnancu (knihovna_id, zamestnanec_id, plat, datum) 
+                             VALUES (@knihovna_id, @zamestnanec_id, @plat, @datum)";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@knihovna_id", idKnihovna);
