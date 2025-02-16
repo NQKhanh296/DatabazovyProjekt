@@ -18,46 +18,7 @@ namespace DatabazovyProjekt
         {
             connection = Singleton.GetInstance();
         }
-        public void SmazatVsechnyZaznamyZTabulky(string volba_randomcase)
-        {
-            string volba = volba_randomcase.ToLower();
-            switch (volba)
-            {
-                case "knihovna":
-                    DeleteFrom(volba);
-                    break;
-                case "zamestnanec":
-                    DeleteFrom(volba);
-                    break;
-                case "kniha":
-                    DeleteFrom(volba);
-                    break;
-                case "evidence_zamestnancu":
-                    DeleteFrom(volba);
-                    break;
-                case "evidence_knih":
-                    DeleteFrom(volba);
-                    break;
-                case "vse":
-                    DeleteFrom("knihovna");
-                    DeleteFrom("zamestnanec");
-                    DeleteFrom("kniha");
-                    DeleteFrom("evidence_zamestnancu");
-                    DeleteFrom("evidence_knih");
-                    break;
-                default:
-                    throw new Exception(@$"Neplatný vstup: {volba}. Povolené volby jsou: 
-                                           knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knih, vse");
-            }
-        }
-        private void DeleteFrom(string nazevTabulky)
-        {
-            string query = $"DELETE FROM {nazevTabulky}";
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.ExecuteNonQuery();
-            }
-        }
+        
         //tabulka knihovna - public metody
         public void PridatKnihovna(Knihovna knihovna)
         {
@@ -163,7 +124,7 @@ namespace DatabazovyProjekt
             }
             if (zamestnanci.Count == 0 || zamestnanci == null)
             {
-                return "Zadni zamestnanci nenalezen v databazi";
+                return "Zadni zamestnanci nebyli nalezeni v databazi";
             }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var z in zamestnanci)
@@ -243,7 +204,7 @@ namespace DatabazovyProjekt
             }
             if (knihy.Count == 0 || knihy == null)
             {
-                return "Zadne knihy nenalezen v databazi";
+                return "Zadne knihy nebyly nalezeny v databazi";
             }
             StringBuilder stringBuilder = new StringBuilder();
             foreach (var k in knihy)
@@ -343,7 +304,7 @@ namespace DatabazovyProjekt
             return stringBuilder.ToString();
         }
 
-        //tabulka evidence_knih - public metody
+        //tabulka evidence_knihy - public metody
         public void EvidovatKnihuDoKnihovny(Kniha kniha, Knihovna knihovna)
         {
             if (!JeKnihaVDatabazi(kniha.nazev))
@@ -360,7 +321,7 @@ namespace DatabazovyProjekt
             {
                 throw new Exception("Tato kniha jiz byla evidovana k teto knihovne.");
             }
-            string query = "INSERT INTO evidence_knih (knihovna_id, kniha_id) VALUES (@knihovna_id, @kniha_id)";
+            string query = "INSERT INTO evidence_knihy (knihovna_id, kniha_id) VALUES (@knihovna_id, @kniha_id)";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@knihovna_id", idKnihovna);
@@ -515,5 +476,143 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
+
+        //Smazani zaznamu
+        public void SmazatVsechnyZaznamyZTabulky(string volba_randomcase)
+        {
+            string volba = volba_randomcase.ToLower();
+            switch (volba)
+            {
+                case "knihovna":
+                    DeleteFrom(volba);
+                    break;
+                case "zamestnanec":
+                    DeleteFrom(volba);
+                    break;
+                case "kniha":
+                    DeleteFrom(volba);
+                    break;
+                case "evidence_zamestnancu":
+                    DeleteFrom(volba);
+                    break;
+                case "evidence_knih":
+                    DeleteFrom(volba);
+                    break;
+                case "vse":
+                    DeleteFrom("knihovna");
+                    DeleteFrom("zamestnanec");
+                    DeleteFrom("kniha");
+                    DeleteFrom("evidence_zamestnancu");
+                    DeleteFrom("evidence_knih");
+                    break;
+                default:
+                    throw new Exception(@$"Neplatny vstup: {volba}. Povolene volby jsou: 
+                                           knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knih, vse");
+            }
+        }
+        private void DeleteFrom(string nazevTabulky)
+        {
+            string query = $"DELETE FROM {nazevTabulky}";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
+
+        //Importovani dat z csv
+        public void ImportDatZCSV(string nazevSouboru)
+        {
+            string prvniRadek;
+            using (var reader = new StreamReader(nazevSouboru))
+            {
+                prvniRadek = reader.ReadLine();
+            }
+            if (string.IsNullOrEmpty(prvniRadek))
+            {
+                throw new Exception("CSV soubor neni ve spravnem formatu");
+            }
+            switch (prvniRadek.ToLower())
+            {
+                case "knihovna":
+                    ImportKnihovnyZCSV(nazevSouboru);
+                    break;
+                case "zamestnanec":
+                    ImportZamestnanciZCSV(nazevSouboru);
+                    break;
+                case "kniha":
+                    ImportKnihyZCSV(nazevSouboru);
+                    break;
+                default:
+                    throw new Exception(@$"Neplatna hodnota v prvnim radku: {prvniRadek}. Povolené hodnoty jsou: 
+                                           knihovna, zamestnanec, kniha");
+            }
+        }
+        private void ImportKnihovnyZCSV(string cestaKSouboru)
+        {
+            using (var reader = new StreamReader(cestaKSouboru))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    if (values.Length != 2)
+                    {
+                        throw new Exception("CSV soubor neni ve spravnem formatu");
+                    }
+                    Knihovna knihovna = new Knihovna(
+                        nazev: values[0],
+                        mesto: values[1]
+                    );
+                    PridatKnihovna(knihovna);
+                }
+            }
+        }
+        private void ImportZamestnanciZCSV(string cestaKSouboru)
+        {
+            using (var reader = new StreamReader(cestaKSouboru))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    if (values.Length != 3)
+                    {
+                        throw new Exception("CSV soubor neni ve spravnem formatu");
+                    }
+                    Zamestnanec zamestnanec = new Zamestnanec(
+                        jmeno: values[0],
+                        prijmeni: values[1],
+                        datum_narozeni: DateTime.Parse(values[2])
+                    );
+                    PridatZamestnance(zamestnanec);
+                }
+            }
+        }
+        private void ImportKnihyZCSV(string cestaKSouboru)
+        {
+            using (var reader = new StreamReader(cestaKSouboru))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    if (values.Length != 4)
+                    {
+                        throw new Exception("CSV soubor neni ve spravnem formatu");
+                    }
+                    Kniha kniha = new Kniha(
+                        nazev: values[0],
+                        zanr: values[1],
+                        autor: values[2],
+                        zapujceno: bool.Parse(values[3])
+                    );
+                    PridatKnihu(kniha);
+                }
+            }
+        }
+
     }
 }
