@@ -30,5 +30,10 @@ namespace DatabazovyProjekt
         public string zanr { get; set; }
         public string autor { get; set; }
         public bool zapujceno { get; set; }
+
+        public override string? ToString()
+        {
+            return $"{id}, {nazev}, {zanr}, {autor}, {zapujceno}";
+        }
     }
 }

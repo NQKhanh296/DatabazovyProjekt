@@ -195,7 +195,7 @@ namespace DatabazovyProjekt
             }
         }
 
-        //tabulka evidence_zamestnancu
+        //tabulka evidence_zamestnancu - public metody
         public void EvidovatZamestnanceDoKnihovny(Zamestnanec zamestnanec, Knihovna knihovna, float plat, DateTime datum)
         {
             if (!JeZamestnanecVDatabazi(zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni))
@@ -210,7 +210,7 @@ namespace DatabazovyProjekt
             int idKnihovna = IDKnihovnaPodleNazevAMesto(knihovna.nazev, knihovna.mesto);
             if (JeEvidenceZamestnanceVDatabazi(idKnihovna, idZamestnance))
             {
-                throw new Exception("Tento zaměstnanec již byl evidován k této knihovně.");
+                throw new Exception("Tento zamestnanec jiz byl evidovan k teto knihovne.");
             }
             string query = "INSERT INTO evidence_zamestnancu (knihovna_id, zamestnanec_id, plat, datum) VALUES (@knihovna_id, @zamestnanec_id, @plat, @datum)";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -221,6 +221,39 @@ namespace DatabazovyProjekt
                 command.Parameters.AddWithValue("@datum", datum);
                 command.ExecuteNonQuery();
             }
+        }
+        public string VsichniZamestnanciZadanehoKnihovny(string nazev, string mesto)
+        {
+            int idKnihovna = IDKnihovnaPodleNazevAMesto(nazev,mesto);
+            List<Zamestnanec> zamestnanci = new List<Zamestnanec>();
+            string query = @"SELECT zamestnanec.id, zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni
+                             FROM zamestnanec
+                             JOIN evidence_zamestnancu ON zamestnanec.id = evidence_zamestnancu.zamestnanec_id
+                             WHERE evidence_zamestnancu.knihovna_id = @knihovna_id";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@knihovna_id", idKnihovna);
+                using SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    zamestnanci.Add(new Zamestnanec(
+                        Convert.ToInt32(reader["id"]),
+                        reader["jmeno"].ToString(),
+                        reader["prijmeni"].ToString(),
+                        DateTime.Parse(reader["datum_narozeni"].ToString())
+                    ));
+                }
+            }
+            if (zamestnanci.Count == 0 || zamestnanci == null)
+            {
+                return "V teto knihovne nejsou evidovani zadni zamestnanci";
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var z in zamestnanci)
+            {
+                stringBuilder.AppendLine(z.ToString());
+            }
+            return stringBuilder.ToString();
         }
 
         //tabulka evidence_knih - public metody
@@ -238,7 +271,7 @@ namespace DatabazovyProjekt
             int idKnihovna = IDKnihovnaPodleNazevAMesto(knihovna.nazev, knihovna.mesto);
             if (JeEvidenceKnihyVDatabazi(idKnihovna, idKniha))
             {
-                throw new Exception("Tato kniha již byla evidována k této knihovně.");
+                throw new Exception("Tato kniha jiz byla evidovana k teto knihovne.");
             }
             string query = "INSERT INTO evidence_knih (knihovna_id, kniha_id) VALUES (@knihovna_id, @kniha_id)";
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -247,6 +280,42 @@ namespace DatabazovyProjekt
                 command.Parameters.AddWithValue("@kniha_id", idKniha);
                 command.ExecuteNonQuery();
             }
+        }
+        public string VsechnyKnihyZadanehoKnihovny(string nazev, string mesto)
+        {
+            int idKnihovna = IDKnihovnaPodleNazevAMesto(nazev, mesto);
+            List<Kniha> knihy = new List<Kniha>();
+            string query = @"SELECT kniha.id, kniha.nazev, kniha.zanr, kniha.autor, kniha.zapujceno 
+                             FROM kniha
+                             INNER JOIN evidence_knihy ON kniha.id = evidence_knihy.kniha_id
+                             WHERE evidence_knihy.knihovna_id = @knihovna_id";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@knihovna_id", idKnihovna);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        knihy.Add(new Kniha(
+                            Convert.ToInt32(reader["id"]),
+                            reader["nazev"].ToString(),
+                            reader["zanr"].ToString(),
+                            reader["autor"].ToString(),
+                            Boolean.Parse(reader["zapujceno"].ToString())
+                        ));
+                    }
+                }
+            }
+            if (knihy.Count == 0)
+            {
+                return "V teto knihovne nejsou evidovany zadne knihy";
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (var k in knihy)
+            {
+                stringBuilder.AppendLine(k.ToString());
+            }
+            return stringBuilder.ToString();
         }
 
 

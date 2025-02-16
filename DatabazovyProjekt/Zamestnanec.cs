@@ -13,10 +13,6 @@ namespace DatabazovyProjekt
         {
             this.jmeno = jmeno;
             this.prijmeni = prijmeni;
-            if (datum_narozeni >= dateCheck)
-            {
-                throw new Exception("Neni 18 let");
-            }
             this.datum_narozeni = datum_narozeni;
         }
 
@@ -32,5 +28,10 @@ namespace DatabazovyProjekt
         public string jmeno { get; set; }
         public string prijmeni { get; set; }
         public DateTime datum_narozeni { get; set; }
+
+        public override string? ToString()
+        {
+            return $"{id}, {jmeno}, {prijmeni}, {datum_narozeni}";
+        }
     }
 }

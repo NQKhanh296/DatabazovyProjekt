@@ -26,7 +26,7 @@ namespace DatabazovyProjekt
         public string mesto { get; set; }
         public override string? ToString()
         {
-            return $"{id},{nazev},{mesto}";
+            return $"{id}, {nazev}, {mesto}";
         }
     }
 }
