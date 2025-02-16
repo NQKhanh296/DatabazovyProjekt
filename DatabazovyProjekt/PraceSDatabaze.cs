@@ -18,6 +18,45 @@ namespace DatabazovyProjekt
         {
             connection = Singleton.GetInstance();
         }
+        public void SmazatVsechnyZaznamyZTabulky(string volba_randomcase)
+        {
+            string volba = volba_randomcase.ToLower();
+            switch (volba)
+            {
+                default:
+                    throw new Exception($"Neplatný vstup: {volba}. Povolené volby jsou: knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knih, vse");
+                case "knihovna":
+                    DeleteFrom(volba);
+                    break;
+                case "zamestnanec":
+                    DeleteFrom(volba);
+                    break;
+                case "kniha":
+                    DeleteFrom(volba);
+                    break;
+                case "evidence_zamestnancu":
+                    DeleteFrom(volba);
+                    break;
+                case "evidence_knih":
+                    DeleteFrom(volba);
+                    break;
+                case "vse":
+                    DeleteFrom("knihovna");
+                    DeleteFrom("zamestnanec");
+                    DeleteFrom("kniha");
+                    DeleteFrom("evidence_zamestnancu");
+                    DeleteFrom("evidence_knih");
+                    break;
+            }
+        }
+        private void DeleteFrom(string nazevTabulky)
+        {
+            string query = $"DELETE FROM {nazevTabulky}";
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
         //tabulka knihovna - public metody
         public void PridatKnihovna(Knihovna knihovna)
         {
