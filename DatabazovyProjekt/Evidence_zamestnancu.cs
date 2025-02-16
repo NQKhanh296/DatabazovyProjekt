@@ -30,17 +30,5 @@ namespace DatabazovyProjekt
         public int zamestnanec_id { get; set; }
         public float plat { get; set; }
         public DateTime datum { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Evidence_zamestnancu zamestnancu &&
-                   knihovna_id == zamestnancu.knihovna_id &&
-                   zamestnanec_id == zamestnancu.zamestnanec_id;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(knihovna_id, zamestnanec_id);
-        }
     }
 }

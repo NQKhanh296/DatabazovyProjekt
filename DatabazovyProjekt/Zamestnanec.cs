@@ -32,18 +32,5 @@ namespace DatabazovyProjekt
         public string jmeno { get; set; }
         public string prijmeni { get; set; }
         public DateTime datum_narozeni { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Zamestnanec zamestnanec &&
-                   jmeno == zamestnanec.jmeno &&
-                   prijmeni == zamestnanec.prijmeni &&
-                   datum_narozeni.Equals(zamestnanec.datum_narozeni);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(jmeno, prijmeni, datum_narozeni);
-        }
     }
 }

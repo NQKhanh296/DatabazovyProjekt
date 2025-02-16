@@ -30,16 +30,5 @@ namespace DatabazovyProjekt
         public string zanr { get; set; }
         public string autor { get; set; }
         public bool zapujceno { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Kniha kniha &&
-                   nazev == kniha.nazev;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(nazev);
-        }
     }
 }

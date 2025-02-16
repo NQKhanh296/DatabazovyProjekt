@@ -4,7 +4,10 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(new DateOnly(2021,3,3));
+            PraceSDatabaze praceSDatabaze = new PraceSDatabaze();
+            //praceSDatabaze.PridatKnihovna(new Knihovna("k1","m1"));
+            //praceSDatabaze.SmazatKnihovna("k1", "m1");
+            //Console.WriteLine(praceSDatabaze.VypisKnihovny());
         }
     }
 }

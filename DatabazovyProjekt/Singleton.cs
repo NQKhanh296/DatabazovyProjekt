@@ -21,6 +21,7 @@ namespace DatabazovyProjekt
                 consStringBuilder.InitialCatalog = ReadSetting("Database");
                 consStringBuilder.DataSource = ReadSetting("DataSource");
                 consStringBuilder.ConnectTimeout = 30;
+                consStringBuilder.TrustServerCertificate = true;
                 conn = new SqlConnection(consStringBuilder.ConnectionString);
                 //Console.WriteLine(consStringBuilder.ConnectionString);
                 conn.Open();
