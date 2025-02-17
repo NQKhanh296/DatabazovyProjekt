@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace DatabazovyProjekt
 {
-    public class PraceSDatabaze
+    public class PraceSDatabazi
     {
         private readonly SqlConnection connection;
 
-        public PraceSDatabaze()
+        public PraceSDatabazi()
         {
             connection = Singleton.GetInstance();
         }
@@ -467,7 +467,7 @@ namespace DatabazovyProjekt
         //tabulka evidence_knihy - private metody
         private bool JeEvidenceKnihyVDatabazi(int knihovnaId, int knihaId)
         {
-            string query = "SELECT COUNT(*) FROM evidence_knih WHERE knihovna_id = @knihovna_id AND kniha_id = @kniha_id";
+            string query = "SELECT COUNT(*) FROM evidence_knihy WHERE knihovna_id = @knihovna_id AND kniha_id = @kniha_id";
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 command.Parameters.AddWithValue("@knihovna_id", knihovnaId);
@@ -495,7 +495,7 @@ namespace DatabazovyProjekt
                 case "evidence_zamestnancu":
                     DeleteFrom(volba);
                     break;
-                case "evidence_knih":
+                case "evidence_knihy":
                     DeleteFrom(volba);
                     break;
                 case "vse":
@@ -503,11 +503,11 @@ namespace DatabazovyProjekt
                     DeleteFrom("zamestnanec");
                     DeleteFrom("kniha");
                     DeleteFrom("evidence_zamestnancu");
-                    DeleteFrom("evidence_knih");
+                    DeleteFrom("evidence_knihy");
                     break;
                 default:
                     throw new Exception(@$"Neplatny vstup: {volba}. Povolene volby jsou: 
-                                           knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knih, vse");
+                                           knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knihy, vse");
             }
         }
         private void DeleteFrom(string nazevTabulky)
