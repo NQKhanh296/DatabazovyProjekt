@@ -48,9 +48,9 @@ Aplikace vyžaduje konfigurační soubor `App.config`, který obsahuje připojov
 <configuration>
     <appSettings>
         <add key="DataSource" value="193.85.203.188"/>
-        <add key="Database" value="JmenoDatabaze"/>
-        <add key="Name" value="PrihlasovaciJmeno"/>
-        <add key="Password" value="Heslo"/>
+        <add key="Database" value="nguyen5"/>
+        <add key="Name" value="nguyen5"/>
+        <add key="Password" value="Kh@nh2006"/>
     </appSettings>
 </configuration>
 ```
@@ -60,11 +60,11 @@ Aplikace vyžaduje konfigurační soubor `App.config`, který obsahuje připojov
 1. Naklonujte repozitář nebo stáhněte zdrojové kódy.
 2. Otevřete projekt v IDE (např. Visual Studio).
 3. Nainstalujte balíčky (viz `Požadavky pro spuštění`)
-3. Nastavte připojovací údaje v `App.config`.
-4. Spusťte aplikaci pomocí tlačítka Spustit nebo `Ctrl + F5`
+4. Nastavte připojovací údaje v `App.config`.
+5. Spusťte aplikaci pomocí tlačítka Spustit nebo `Ctrl + F5`
 
 ## Závěr
 
-Tato aplikace poskytuje jednoduché rozhraní pro správu databáze knihoven, zaměstnanců a knih
+Tato aplikace poskytuje jednoduché rozhraní pro správu databáze knihoven, zaměstnanců a knih.
 
-## Autor : Nguyen Quoc Khanh ze třídy C3a
+## Autor: Nguyen Quoc Khanh C3a
