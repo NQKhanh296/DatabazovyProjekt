@@ -41,7 +41,6 @@ Třída `Program` je Main, zde je uživatelské rozhraní, když spustí, vypí�
 
 Aplikace vyžaduje konfigurační soubor `App.config`, který obsahuje připojovací údaje k databázi. 
 
-**Příklad konfiguračního souboru:**
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -60,7 +59,6 @@ Aplikace vyžaduje konfigurační soubor `App.config`, který obsahuje připojov
 1. Naklonujte repozitář nebo stáhněte zdrojové kódy.
 2. Otevřete projekt v IDE (např. Visual Studio).
 3. Nainstalujte balíčky (viz `Požadavky pro spuštění`)
-4. Nastavte připojovací údaje v `App.config`.
 5. Spusťte aplikaci pomocí tlačítka Spustit nebo `Ctrl + F5`
 
 ## Závěr
