@@ -31,7 +31,7 @@ namespace DatabazovyProjekt
 
         public override string? ToString()
         {
-            return $"{id}, {jmeno}, {prijmeni}, {datum_narozeni}";
+            return $"{id}, {jmeno}, {prijmeni}, {datum_narozeni.Date}";
         }
     }
 }

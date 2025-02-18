@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DatabazovyProjekt
 {
-    public class Singleton
+    public class Singleton // prevzato z projektu DAOC3a
     {
         private static SqlConnection? conn = null;
         public static SqlConnection GetInstance()

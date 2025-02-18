@@ -95,12 +95,11 @@
                             break;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    Console.WriteLine($"Došlo k chybě: {ex.Message}");
+                    Console.WriteLine(e.Message);
                 }
-
-                Console.WriteLine("\nStiskněte libovolnou klávesu pro pokračování...");
+                Console.WriteLine("Stiskněte libovolnou klávesu pro pokračování");
                 Console.ReadKey();
                 Console.Clear();
             }
@@ -109,9 +108,10 @@
         {
             Console.Write("Zadejte název knihovny: ");
             string nazev = Console.ReadLine();
+            NeprazdnyString(nazev);
             Console.Write("Zadejte město: ");
             string mesto = Console.ReadLine();
-
+            NeprazdnyString(mesto);
             Knihovna knihovna = new Knihovna(nazev, mesto);
             praceSDatabazi.PridatKnihovna(knihovna);
             Console.WriteLine("Knihovna byla úspěšně přidána.");
@@ -121,9 +121,10 @@
         {
             Console.Write("Zadejte název knihovny: ");
             string nazev = Console.ReadLine();
+            NeprazdnyString(nazev);
             Console.Write("Zadejte město: ");
             string mesto = Console.ReadLine();
-
+            NeprazdnyString(mesto);
             praceSDatabazi.SmazatKnihovna(nazev, mesto);
             Console.WriteLine("Knihovna byla úspěšně smazána.");
         }
@@ -138,13 +139,16 @@
         {
             Console.Write("Zadejte původní název knihovny: ");
             string puvodniNazev = Console.ReadLine();
+            NeprazdnyString(puvodniNazev);
             Console.Write("Zadejte původní město: ");
             string puvodniMesto = Console.ReadLine();
+            NeprazdnyString(puvodniMesto);
             Console.Write("Zadejte nový název knihovny: ");
             string novyNazev = Console.ReadLine();
+            NeprazdnyString(novyNazev);
             Console.Write("Zadejte nové město: ");
             string noveMesto = Console.ReadLine();
-
+            NeprazdnyString(noveMesto);
             praceSDatabazi.UpravitKnihovnu(puvodniNazev, puvodniMesto, novyNazev, noveMesto);
             Console.WriteLine("Knihovna byla úspěšně upravena.");
         }
@@ -153,11 +157,12 @@
         {
             Console.Write("Zadejte jméno zaměstnance: ");
             string jmeno = Console.ReadLine();
+            NeprazdnyString(jmeno);
             Console.Write("Zadejte příjmení zaměstnance: ");
             string prijmeni = Console.ReadLine();
+            NeprazdnyString(prijmeni);
             Console.Write("Zadejte datum narození (YYYY-MM-DD): ");
             DateTime datumNarozeni = DateTime.Parse(Console.ReadLine());
-
             Zamestnanec zamestnanec = new Zamestnanec(jmeno, prijmeni, datumNarozeni);
             praceSDatabazi.PridatZamestnance(zamestnanec);
             Console.WriteLine("Zaměstnanec byl úspěšně přidán.");
@@ -167,11 +172,12 @@
         {
             Console.Write("Zadejte jméno zaměstnance: ");
             string jmeno = Console.ReadLine();
+            NeprazdnyString(jmeno);
             Console.Write("Zadejte příjmení zaměstnance: ");
             string prijmeni = Console.ReadLine();
+            NeprazdnyString(prijmeni);
             Console.Write("Zadejte datum narození (YYYY-MM-DD): ");
             DateTime datumNarozeni = DateTime.Parse(Console.ReadLine());
-
             praceSDatabazi.SmazatZamestnance(jmeno, prijmeni, datumNarozeni);
             Console.WriteLine("Zaměstnanec byl úspěšně smazán.");
         }
@@ -186,17 +192,20 @@
         {
             Console.Write("Zadejte původní jméno zaměstnance: ");
             string puvodniJmeno = Console.ReadLine();
+            NeprazdnyString(puvodniJmeno);
             Console.Write("Zadejte původní příjmení zaměstnance: ");
             string puvodniPrijmeni = Console.ReadLine();
+            NeprazdnyString(puvodniPrijmeni);
             Console.Write("Zadejte původní datum narození (YYYY-MM-DD): ");
             DateTime puvodniDatumNarozeni = DateTime.Parse(Console.ReadLine());
             Console.Write("Zadejte nové jméno zaměstnance: ");
             string noveJmeno = Console.ReadLine();
+            NeprazdnyString(noveJmeno);
             Console.Write("Zadejte nové příjmení zaměstnance: ");
             string novePrijmeni = Console.ReadLine();
+            NeprazdnyString(novePrijmeni);
             Console.Write("Zadejte nové datum narození (YYYY-MM-DD): ");
             DateTime noveDatumNarozeni = DateTime.Parse(Console.ReadLine());
-
             praceSDatabazi.UpravitZamestnance(puvodniJmeno, puvodniPrijmeni, puvodniDatumNarozeni, noveJmeno, novePrijmeni, noveDatumNarozeni);
             Console.WriteLine("Zaměstnanec byl úspěšně upraven.");
         }
@@ -205,13 +214,15 @@
         {
             Console.Write("Zadejte název knihy: ");
             string nazev = Console.ReadLine();
+            NeprazdnyString(nazev);
             Console.Write("Zadejte žánr: ");
             string zanr = Console.ReadLine();
+            NeprazdnyString(zanr);
             Console.Write("Zadejte autora: ");
             string autor = Console.ReadLine();
+            NeprazdnyString(autor);
             Console.Write("Je kniha zapůjčena (true/false): ");
             bool zapujceno = bool.Parse(Console.ReadLine());
-
             Kniha kniha = new Kniha(nazev, zanr, autor, zapujceno);
             praceSDatabazi.PridatKnihu(kniha);
             Console.WriteLine("Kniha byla úspěšně přidána.");
@@ -221,7 +232,7 @@
         {
             Console.Write("Zadejte název knihy: ");
             string nazev = Console.ReadLine();
-
+            NeprazdnyString(nazev);
             praceSDatabazi.SmazatKnihu(nazev);
             Console.WriteLine("Kniha byla úspěšně smazána.");
         }
@@ -236,15 +247,18 @@
         {
             Console.Write("Zadejte původní název knihy: ");
             string puvodniNazev = Console.ReadLine();
+            NeprazdnyString(puvodniNazev);
             Console.Write("Zadejte nový název knihy: ");
             string novyNazev = Console.ReadLine();
+            NeprazdnyString(novyNazev);
             Console.Write("Zadejte nový žánr: ");
             string novyZanr = Console.ReadLine();
+            NeprazdnyString(novyZanr);
             Console.Write("Zadejte nového autora: ");
             string novyAutor = Console.ReadLine();
+            NeprazdnyString(novyAutor);
             Console.Write("Je kniha zapůjčena (true/false): ");
             bool noveZapujceno = bool.Parse(Console.ReadLine());
-
             praceSDatabazi.UpravitKnihu(puvodniNazev, novyNazev, novyZanr, novyAutor, noveZapujceno);
             Console.WriteLine("Kniha byla úspěšně upravena.");
         }
@@ -253,19 +267,22 @@
         {
             Console.Write("Zadejte jméno zaměstnance: ");
             string jmeno = Console.ReadLine();
+            NeprazdnyString(jmeno);
             Console.Write("Zadejte příjmení zaměstnance: ");
             string prijmeni = Console.ReadLine();
+            NeprazdnyString(prijmeni);
             Console.Write("Zadejte datum narození zaměstnance (YYYY-MM-DD): ");
             DateTime datumNarozeni = DateTime.Parse(Console.ReadLine());
             Console.Write("Zadejte název knihovny: ");
             string nazevKnihovny = Console.ReadLine();
+            NeprazdnyString(nazevKnihovny);
             Console.Write("Zadejte město knihovny: ");
             string mestoKnihovny = Console.ReadLine();
+            NeprazdnyString(mestoKnihovny);
             Console.Write("Zadejte plat: ");
             float plat = float.Parse(Console.ReadLine());
             Console.Write("Zadejte datum evidence (YYYY-MM-DD): ");
             DateTime datum = DateTime.Parse(Console.ReadLine());
-
             Zamestnanec zamestnanec = new Zamestnanec(jmeno, prijmeni, datumNarozeni);
             Knihovna knihovna = new Knihovna(nazevKnihovny, mestoKnihovny);
             praceSDatabazi.EvidovatZamestnanceDoKnihovny(zamestnanec, knihovna, plat, datum);
@@ -276,11 +293,13 @@
         {
             Console.Write("Zadejte název knihy: ");
             string nazevKnihy = Console.ReadLine();
+            NeprazdnyString(nazevKnihy);
             Console.Write("Zadejte název knihovny: ");
             string nazevKnihovny = Console.ReadLine();
+            NeprazdnyString(nazevKnihovny);
             Console.Write("Zadejte město knihovny: ");
             string mestoKnihovny = Console.ReadLine();
-
+            NeprazdnyString(mestoKnihovny);
             Kniha kniha = new Kniha(nazevKnihy, "", "", false);
             Knihovna knihovna = new Knihovna(nazevKnihovny, mestoKnihovny);
             praceSDatabazi.EvidovatKnihuDoKnihovny(kniha, knihovna);
@@ -291,10 +310,11 @@
         {
             Console.Write("Zadejte název knihovny: ");
             string nazev = Console.ReadLine();
+            NeprazdnyString(nazev);
             Console.Write("Zadejte město knihovny: ");
             string mesto = Console.ReadLine();
-
-            string zamestnanci = praceSDatabazi.VsichniZamestnanciZadanehoKnihovny(nazev, mesto);
+            NeprazdnyString(mesto);
+            string zamestnanci = praceSDatabazi.VsechnyZamestnanceZadanehoKnihovny(nazev, mesto);
             Console.WriteLine(zamestnanci);
         }
 
@@ -302,9 +322,10 @@
         {
             Console.Write("Zadejte název knihovny: ");
             string nazev = Console.ReadLine();
+            NeprazdnyString(nazev);
             Console.Write("Zadejte město knihovny: ");
             string mesto = Console.ReadLine();
-
+            NeprazdnyString(mesto);
             string knihy = praceSDatabazi.VsechnyKnihyZadanehoKnihovny(nazev, mesto);
             Console.WriteLine(knihy);
         }
@@ -313,18 +334,23 @@
         {
             Console.Write("Zadejte název tabulky (knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knihy) nebo 'vse': ");
             string volba = Console.ReadLine();
-
             praceSDatabazi.SmazatVsechnyZaznamyZTabulky(volba);
             Console.WriteLine("Záznamy byly úspěšně smazány.");
         }
 
         private static void ImportDatZCSV(PraceSDatabazi praceSDatabazi)
         {
-            Console.Write("Zadejte cestu k CSV souboru: ");
-            string cesta = Console.ReadLine();
-
-            praceSDatabazi.ImportDatZCSV(cesta);
+            Console.Write("Zadejte název souboru: ");
+            string nazevSouboru = Console.ReadLine();
+            praceSDatabazi.ImportDatZCSV(nazevSouboru);
             Console.WriteLine("Data byla úspěšně importována.");
+        }
+        private static void NeprazdnyString(string s)
+        {
+            if (string.IsNullOrEmpty(s))
+            {
+                throw new Exception("Input nesmi byt prazdny");
+            }
         }
     }
 }

@@ -20,6 +20,11 @@ namespace DatabazovyProjekt
         }
         
         //tabulka knihovna - public metody
+        /// <summary>
+        /// Metoda pro pridani knihovny do databazi
+        /// </summary>
+        /// <param name="knihovna">nazev knihovny</param>
+        /// <exception cref="Exception">Pokud kniha se stejnym nazvem a mestem uz je v databazi</exception>
         public void PridatKnihovna(Knihovna knihovna)
         {
             if (JeKnihovnaVDatabazi(knihovna.nazev, knihovna.mesto))
@@ -34,6 +39,10 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// Metoda pro vypsani vsech knihoven
+        /// </summary>
+        /// <returns>string vsech knihoven</returns>
         public string VypisKnihovny()
         {
             List<Knihovna> knihovny = new List<Knihovna>();
@@ -55,12 +64,20 @@ namespace DatabazovyProjekt
                 return "Zadne knihovny nenalezen v databazi";
             }
             StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("id, nazev, mesto");
             foreach (var k in knihovny)
             {
                 stringBuilder.AppendLine(k.ToString());
             }
             return stringBuilder.ToString();
         }
+        /// <summary>
+        /// Metoda pro upravovani knihovny v databazi
+        /// </summary>
+        /// <param name="puvodniNazev"></param>
+        /// <param name="puvodniMesto"></param>
+        /// <param name="novyNazev"></param>
+        /// <param name="noveMesto"></param>
         public void UpravitKnihovnu(string puvodniNazev, string puvodniMesto, string novyNazev, string noveMesto)
         {
             int idKnihovna = IDKnihovnaPodleNazevAMesto(puvodniNazev,puvodniMesto);
@@ -73,6 +90,12 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// Metoda pro smazani konkretniho knihovny podle nazev a mesto
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <param name="mesto"></param>
+        /// <exception cref="Exception">Pokud knihovna neni v databazi</exception>
         public void SmazatKnihovna(string nazev, string mesto)
         {
             if (!JeKnihovnaVDatabazi(nazev,mesto))
@@ -89,6 +112,11 @@ namespace DatabazovyProjekt
         }
 
         //tabulka zamestnanec - public metody
+        /// <summary>
+        /// Metoda pro pridani zamestnance do databazi
+        /// </summary>
+        /// <param name="zamestnanec"></param>
+        /// <exception cref="Exception">Pokud zamestnanec uz je v databazi</exception>
         public void PridatZamestnance(Zamestnanec zamestnanec)
         {
             if (JeZamestnanecVDatabazi(zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni))
@@ -105,6 +133,10 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// Metoda pro vypsani vsech zamestnancu 
+        /// </summary>
+        /// <returns>string vsech zamestnance</returns>
         public string VypisZamestnance()
         {
             List<Zamestnanec> zamestnanci = new List<Zamestnanec>();
@@ -118,7 +150,7 @@ namespace DatabazovyProjekt
                         Convert.ToInt32(reader["id"]),
                         reader["jmeno"].ToString(),
                         reader["prijmeni"].ToString(),
-                        DateTime.Parse(reader["datum_narozeni"].ToString())
+                        DateTime.Parse(reader["datum_narozeni"].ToString()).Date
                     ));
                 }
             }
@@ -127,12 +159,22 @@ namespace DatabazovyProjekt
                 return "Zadni zamestnanci nebyli nalezeni v databazi";
             }
             StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("id, jmeno, prijmeni, datum_narozeni");
             foreach (var z in zamestnanci)
             {
                 stringBuilder.AppendLine(z.ToString());
             }
             return stringBuilder.ToString();
         }
+        /// <summary>
+        /// Metoda pro upraveni zamestnance v databazi
+        /// </summary>
+        /// <param name="puvodniJmeno"></param>
+        /// <param name="puvodniPrijmeni"></param>
+        /// <param name="puvodniDatumNarozeni"></param>
+        /// <param name="noveJmeno"></param>
+        /// <param name="novePrijmeni"></param>
+        /// <param name="noveDatumNarozeni"></param>
         public void UpravitZamestnance(string puvodniJmeno, string puvodniPrijmeni, DateTime puvodniDatumNarozeni, string noveJmeno, string novePrijmeni, DateTime noveDatumNarozeni)
         {
             int idZamestnance = IDZamestnancePodleJmenaPrijmeniADatumNarozeni(puvodniJmeno,puvodniPrijmeni,puvodniDatumNarozeni);
@@ -148,6 +190,13 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// Metoda pro smazani konkretniho zamestnance
+        /// </summary>
+        /// <param name="jmeno"></param>
+        /// <param name="prijmeni"></param>
+        /// <param name="datum_narozeni"></param>
+        /// <exception cref="Exception">Pokud zamestnanec neni v databazi</exception>
         public void SmazatZamestnance(string jmeno, string prijmeni, DateTime datum_narozeni)
         {
             if (!JeZamestnanecVDatabazi(jmeno, prijmeni, datum_narozeni))
@@ -168,6 +217,11 @@ namespace DatabazovyProjekt
         }
    
         //tabulka Kniha - public metody
+        /// <summary>
+        /// Metoda pro pridani knihy
+        /// </summary>
+        /// <param name="kniha"></param>
+        /// <exception cref="Exception">Pokud kniha uz je v databazi</exception>
         public void PridatKnihu(Kniha kniha)
         {
             if (JeKnihaVDatabazi(kniha.nazev))
@@ -184,6 +238,10 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// metoda pro vypsani vsech knih v databazi
+        /// </summary>
+        /// <returns></returns>
         public string VypisKnihy()                                                           
         {
             List<Kniha> knihy = new List<Kniha>();
@@ -207,12 +265,21 @@ namespace DatabazovyProjekt
                 return "Zadne knihy nebyly nalezeny v databazi";
             }
             StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("id, nazev, zanr, autor, zapujceno");
             foreach (var k in knihy)
             {
                 stringBuilder.AppendLine(k.ToString());
             }
             return stringBuilder.ToString();
         }
+        /// <summary>
+        /// Metoda pro upravovani knih v databazi
+        /// </summary>
+        /// <param name="puvodniNazev"></param>
+        /// <param name="novyNazev"></param>
+        /// <param name="novyZanr"></param>
+        /// <param name="novyAutor"></param>
+        /// <param name="noveZapujceno"></param>
         public void UpravitKnihu(string puvodniNazev, string novyNazev, string novyZanr, string novyAutor, bool noveZapujceno)
         {
             int idKniha = IDKnihaPodleNazev(puvodniNazev);
@@ -228,6 +295,11 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// Metoda pro smazani konkretni knihy v databazi
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <exception cref="Exception"></exception>
         public void SmazatKnihu(string nazev)
         {
             if (!JeKnihaVDatabazi(nazev))
@@ -243,6 +315,14 @@ namespace DatabazovyProjekt
         }
 
         //tabulka evidence_zamestnancu - public metody
+        /// <summary>
+        /// Metoda pro evidovani zamestnance do knihovny, pokud zamestnanec nebo knihovna neni v databazi, pridava se
+        /// </summary>
+        /// <param name="zamestnanec"></param>
+        /// <param name="knihovna"></param>
+        /// <param name="plat"></param>
+        /// <param name="datum"></param>
+        /// <exception cref="Exception">Pokud tento zamestnanec uz je evidovan do teto knihovny </exception>
         public void EvidovatZamestnanceDoKnihovny(Zamestnanec zamestnanec, Knihovna knihovna, float plat, DateTime datum)
         {
             if (!JeZamestnanecVDatabazi(zamestnanec.jmeno, zamestnanec.prijmeni, zamestnanec.datum_narozeni))
@@ -270,7 +350,13 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
-        public string VsichniZamestnanciZadanehoKnihovny(string nazev, string mesto)
+        /// <summary>
+        /// Metoda pro vypsani vsechny zamestnance konkretni knihovny
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <param name="mesto"></param>
+        /// <returns>string vsechny zamestnance konkretni knihovny</returns>
+        public string VsechnyZamestnanceZadanehoKnihovny(string nazev, string mesto)
         {
             int idKnihovna = IDKnihovnaPodleNazevAMesto(nazev,mesto);
             List<Zamestnanec> zamestnanci = new List<Zamestnanec>();
@@ -288,7 +374,7 @@ namespace DatabazovyProjekt
                         Convert.ToInt32(reader["id"]),
                         reader["jmeno"].ToString(),
                         reader["prijmeni"].ToString(),
-                        DateTime.Parse(reader["datum_narozeni"].ToString())
+                        DateTime.Parse(reader["datum_narozeni"].ToString()).Date
                     ));
                 }
             }
@@ -297,6 +383,7 @@ namespace DatabazovyProjekt
                 return "V teto knihovne nejsou evidovani zadni zamestnanci";
             }
             StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("id, jmeno, prijmeni, datum_narozeni");
             foreach (var z in zamestnanci)
             {
                 stringBuilder.AppendLine(z.ToString());
@@ -305,6 +392,12 @@ namespace DatabazovyProjekt
         }
 
         //tabulka evidence_knihy - public metody
+        /// <summary>
+        /// Metoda pro evidovani knih do knihovny, pokud kniha nebo knihovna neni v databazi, pridava se
+        /// </summary>
+        /// <param name="kniha"></param>
+        /// <param name="knihovna"></param>
+        /// <exception cref="Exception">Pokud tato kniha uz byl evidovan do teto knihovny</exception>
         public void EvidovatKnihuDoKnihovny(Kniha kniha, Knihovna knihovna)
         {
             if (!JeKnihaVDatabazi(kniha.nazev))
@@ -329,6 +422,12 @@ namespace DatabazovyProjekt
                 command.ExecuteNonQuery();
             }
         }
+        /// <summary>
+        /// Metoda pro vypsani vsechny knihy konkretni knihovny
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <param name="mesto"></param>
+        /// <returns>string vsechny knihy konkretni knihovny</returns>
         public string VsechnyKnihyZadanehoKnihovny(string nazev, string mesto)
         {
             int idKnihovna = IDKnihovnaPodleNazevAMesto(nazev, mesto);
@@ -359,6 +458,7 @@ namespace DatabazovyProjekt
                 return "V teto knihovne nejsou evidovany zadne knihy";
             }
             StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("id, nazev, zanr, autor");
             foreach (var k in knihy)
             {
                 stringBuilder.AppendLine(k.ToString());
@@ -368,6 +468,12 @@ namespace DatabazovyProjekt
 
 
         //tabulka knihovna - private metody
+        /// <summary>
+        /// Private metoda pro kontrolu jestli se v databazi nachazi tato knihovna
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <param name="mesto"></param>
+        /// <returns>True pokud nachazi, false pokud ne</returns>
         private bool JeKnihovnaVDatabazi(string nazev, string mesto)
         {
             string query = "SELECT COUNT(*) FROM knihovna WHERE nazev = @nazev AND mesto = @mesto";
@@ -379,6 +485,13 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
+        /// <summary>
+        /// Private metoda pro hledani id knihovny podle nazev a mesto
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <param name="mesto"></param>
+        /// <returns>id knihovna pokud existuje v databazi</returns>
+        /// <exception cref="Exception">Pokud id nebyl nalezen</exception>
         private int IDKnihovnaPodleNazevAMesto(string nazev, string mesto)
         {
             string query = "SELECT knihovna.id FROM knihovna WHERE nazev = @nazev AND mesto = @mesto";
@@ -396,6 +509,13 @@ namespace DatabazovyProjekt
         }
 
         //tabulka zamestnanec - private metody
+        /// <summary>
+        /// Private metoda pro kontrolu jestli se v databazi nachazi tento zamestnanec
+        /// </summary>
+        /// <param name="jmeno"></param>
+        /// <param name="prijmeni"></param>
+        /// <param name="datum_narozeni"></param>
+        /// <returns>True pokud nachazi, false pokud ne</returns>
         private bool JeZamestnanecVDatabazi(string jmeno, string prijmeni, DateTime datum_narozeni)
         {
             string query = "SELECT COUNT(*) FROM zamestnanec WHERE jmeno = @jmeno AND prijmeni = @prijmeni AND datum_narozeni = @datum_narozeni";
@@ -408,6 +528,14 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
+        /// <summary>
+        /// Private metoda pro hledani id zamestnance podle jmeno, prijmeni a datum narozeni
+        /// </summary>
+        /// <param name="jmeno"></param>
+        /// <param name="prijmeni"></param>
+        /// <param name="datum_narozeni"></param>
+        /// <returns>id zamestnance pokud existuje v databazi</returns>
+        /// <exception cref="Exception">Pokud id nebyl nalezen</exception>
         private int IDZamestnancePodleJmenaPrijmeniADatumNarozeni(string jmeno, string prijmeni, DateTime datum_narozeni)
         {
             string query = "SELECT zamestnanec.id FROM zamestnanec WHERE jmeno = @jmeno and prijmeni = @prijmeni and datum_narozeni = @datum_narozeni";
@@ -426,6 +554,11 @@ namespace DatabazovyProjekt
         }
 
         //tabulka kniha - private metody
+        /// <summary>
+        /// Private metoda pro kontrolu jestli se v databazi nachazi tato kniha
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <returns>True pokud nachazi, false pokud ne</returns>
         private bool JeKnihaVDatabazi(string nazev)
         {
             string query = "SELECT COUNT(*) FROM kniha WHERE nazev = @nazev";
@@ -436,6 +569,12 @@ namespace DatabazovyProjekt
                 return count > 0;
             }
         }
+        /// <summary>
+        /// Private metoda pro hledani id knihy podle nazvy
+        /// </summary>
+        /// <param name="nazev"></param>
+        /// <returns>id knihy pokud existuje v databazi</returns>
+        /// <exception cref="Exception">Pokud id nebyl nalezen</exception>
         private int IDKnihaPodleNazev(string nazev)
         {
             string query = "SELECT kniha.id FROM kniha WHERE nazev = @nazev";
@@ -452,6 +591,12 @@ namespace DatabazovyProjekt
         }
 
         //tabulka evidence_zamestnancu - private metody
+        /// <summary>
+        /// Private metoda pro kontrolu jestli se v databazi nachazi tato evidence zamestnance
+        /// </summary>
+        /// <param name="knihovnaId"></param>
+        /// <param name="zamestnanecId"></param>
+        /// <returns>True pokud nachazi, false pokud ne</returns>
         private bool JeEvidenceZamestnanceVDatabazi(int knihovnaId, int zamestnanecId)
         {
             string query = "SELECT COUNT(*) FROM evidence_zamestnancu WHERE knihovna_id = @knihovna_id AND zamestnanec_id = @zamestnanec_id";
@@ -465,6 +610,12 @@ namespace DatabazovyProjekt
         }
 
         //tabulka evidence_knihy - private metody
+        /// <summary>
+        /// Private metoda pro kontrolu jestli se v databazi nachazi tato evidence knihy
+        /// </summary>
+        /// <param name="knihovnaId"></param>
+        /// <param name="knihaId"></param>
+        /// <returns>True pokud nachazi, false pokud ne</returns>
         private bool JeEvidenceKnihyVDatabazi(int knihovnaId, int knihaId)
         {
             string query = "SELECT COUNT(*) FROM evidence_knihy WHERE knihovna_id = @knihovna_id AND kniha_id = @kniha_id";
@@ -478,6 +629,11 @@ namespace DatabazovyProjekt
         }
 
         //Smazani zaznamu
+        /// <summary>
+        /// Metoda pro smazani vsech daty ze tabulky nebo ze vsech tabulek podle vyberu uzivatele
+        /// </summary>
+        /// <param name="volba_randomcase">Volba uzivatele ve velkym nebo malym pismene</param>
+        /// <exception cref="Exception">Pokud neni volba spravne</exception>
         public void SmazatVsechnyZaznamyZTabulky(string volba_randomcase)
         {
             string volba = volba_randomcase.ToLower();
@@ -510,6 +666,10 @@ namespace DatabazovyProjekt
                                            knihovna, zamestnanec, kniha, evidence_zamestnancu, evidence_knihy, vse");
             }
         }
+        /// <summary>
+        /// Private metoda pro smazani vsech dat konkretni tabulky
+        /// </summary>
+        /// <param name="nazevTabulky"></param>
         private void DeleteFrom(string nazevTabulky)
         {
             string query = $"DELETE FROM {nazevTabulky}";
@@ -520,6 +680,12 @@ namespace DatabazovyProjekt
         }
 
         //Importovani dat z csv
+        /// <summary>
+        /// Metoda pro importovani dat z csv soubor do tabulky databazi, precte prvni radek souboru pro zjisteni nazev tabulku 
+        /// pak nacte data podle tabulky
+        /// </summary>
+        /// <param name="nazevSouboru"></param>
+        /// <exception cref="Exception">Pokud soubor neni ve spravnem formatu</exception>
         public void ImportDatZCSV(string nazevSouboru)
         {
             string prvniRadek;
@@ -547,72 +713,79 @@ namespace DatabazovyProjekt
                                            knihovna, zamestnanec, kniha");
             }
         }
-        private void ImportKnihovnyZCSV(string cestaKSouboru)
+        /// <summary>
+        /// Private metoda pro importovani knihovny z csv soubor
+        /// </summary>
+        /// <param name="nazevSouboru"></param>
+        /// <exception cref="Exception">Pokud soubor neni ve spravnem formatu</exception>
+        private void ImportKnihovnyZCSV(string nazevSouboru)
         {
-            using (var reader = new StreamReader(cestaKSouboru))
+            using var reader = new StreamReader(nazevSouboru);
+            reader.ReadLine();
+            while (!reader.EndOfStream)
             {
-                reader.ReadLine();
-                while (!reader.EndOfStream)
+                var line = reader.ReadLine();
+                var values = line.Split(',');
+                if (values.Length != 2)
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
-                    if (values.Length != 2)
-                    {
-                        throw new Exception("CSV soubor neni ve spravnem formatu");
-                    }
-                    Knihovna knihovna = new Knihovna(
-                        nazev: values[0],
-                        mesto: values[1]
-                    );
-                    PridatKnihovna(knihovna);
+                    throw new Exception("CSV soubor neni ve spravnem formatu");
                 }
+                Knihovna knihovna = new Knihovna(
+                    nazev: values[0],
+                    mesto: values[1]
+                );
+                PridatKnihovna(knihovna);
+            }
+        }/// <summary>
+         /// Private metoda pro importovani zamestnance z csv soubor
+         /// </summary>
+         /// <param name="nazevSouboru"></param>
+         /// <exception cref="Exception">Pokud soubor neni ve spravnem formatu</exception>
+        private void ImportZamestnanciZCSV(string nazevSouboru)
+        {
+            using var reader = new StreamReader(nazevSouboru);
+            reader.ReadLine();
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                var values = line.Split(',');
+                if (values.Length != 3)
+                {
+                    throw new Exception("CSV soubor neni ve spravnem formatu");
+                }
+                Zamestnanec zamestnanec = new Zamestnanec(
+                    jmeno: values[0],
+                    prijmeni: values[1],
+                    datum_narozeni: DateTime.Parse(values[2])
+                );
+                PridatZamestnance(zamestnanec);
             }
         }
-        private void ImportZamestnanciZCSV(string cestaKSouboru)
+        /// <summary>
+        /// Private metoda pro importovani knihy z csv soubor
+        /// </summary>
+        /// <param name="nazevSouboru"></param>
+        /// <exception cref="Exception">Pokud soubor neni ve spravnem formatu</exception>
+        private void ImportKnihyZCSV(string nazevSouboru)
         {
-            using (var reader = new StreamReader(cestaKSouboru))
+            using var reader = new StreamReader(nazevSouboru);
+            reader.ReadLine();
+            while (!reader.EndOfStream)
             {
-                reader.ReadLine();
-                while (!reader.EndOfStream)
+                var line = reader.ReadLine();
+                var values = line.Split(',');
+                if (values.Length != 4)
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
-                    if (values.Length != 3)
-                    {
-                        throw new Exception("CSV soubor neni ve spravnem formatu");
-                    }
-                    Zamestnanec zamestnanec = new Zamestnanec(
-                        jmeno: values[0],
-                        prijmeni: values[1],
-                        datum_narozeni: DateTime.Parse(values[2])
-                    );
-                    PridatZamestnance(zamestnanec);
+                    throw new Exception("CSV soubor neni ve spravnem formatu");
                 }
+                Kniha kniha = new Kniha(
+                    nazev: values[0],
+                    zanr: values[1],
+                    autor: values[2],
+                    zapujceno: bool.Parse(values[3])
+                );
+                PridatKnihu(kniha);
             }
         }
-        private void ImportKnihyZCSV(string cestaKSouboru)
-        {
-            using (var reader = new StreamReader(cestaKSouboru))
-            {
-                reader.ReadLine();
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    var values = line.Split(',');
-                    if (values.Length != 4)
-                    {
-                        throw new Exception("CSV soubor neni ve spravnem formatu");
-                    }
-                    Kniha kniha = new Kniha(
-                        nazev: values[0],
-                        zanr: values[1],
-                        autor: values[2],
-                        zapujceno: bool.Parse(values[3])
-                    );
-                    PridatKnihu(kniha);
-                }
-            }
-        }
-
     }
 }
