@@ -49,7 +49,7 @@ Aplikace vyžaduje konfigurační soubor `App.config`, který obsahuje připojov
         <add key="DataSource" value="193.85.203.188"/>
         <add key="Database" value="nguyen5"/>
         <add key="Name" value="nguyen5"/>
-        <add key="Password" value="Kh@nh2006"/>
+        <add key="Password" value="password"/>
     </appSettings>
 </configuration>
 ```
